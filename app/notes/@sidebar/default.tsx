@@ -2,7 +2,7 @@ import css from './SidebarNotes.module.css';
 
 import Link from 'next/link';
 
-const NotesSidebar = async () => {
+const NotesSidebar = () => {
   const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
 
   return (
@@ -21,7 +21,6 @@ const NotesSidebar = async () => {
           </Link>
         </li>
       ))}
-      ,
     </ul>
   );
 };
