@@ -5,15 +5,15 @@ import {
 } from '@tanstack/react-query';
 
 import { fetchNotes } from '@/lib/api';
+import NotesClient from './Notes.client';
 
-interface SlugPageProps {params: Promise<{ slug: string[]}>};
+interface SlugPageProps {
+  params: Promise<{ slug: string[] }>;
+}
 
-export default async function SlugPage({params}: SlugPageProps) {
-
-    const slug = await params
+export default async function SlugPage({ params }: SlugPageProps) {
+  const slug = await params;
   const queryClient = new QueryClient();
-
-  
 
   const initialQuery = '';
   const initialPage = 1;
@@ -21,13 +21,13 @@ export default async function SlugPage({params}: SlugPageProps) {
   const perPage = 12;
 
   await queryClient.prefetchQuery({
-    queryKey: [{slug}, initialQuery, initialPage, sortOrder, perPage],
+    queryKey: ['notes', slug, initialQuery, initialPage, sortOrder, perPage],
     queryFn: () => fetchNotes(initialQuery, initialPage, sortOrder, perPage),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <{slug}
+      <NotesClient
         initialQuery={initialQuery}
         initialPage={initialPage}
         sortOrder={sortOrder}

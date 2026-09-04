@@ -1,4 +1,4 @@
-import css from './NotesPage.module.css';
+import css from './LayoutNotes.module.css';
 
 type NotesLayoutProps = {
   children: React.ReactNode;
