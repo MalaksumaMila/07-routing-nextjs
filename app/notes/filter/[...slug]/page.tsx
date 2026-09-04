@@ -12,7 +12,9 @@ interface SlugPageProps {
 }
 
 export default async function SlugPage({ params }: SlugPageProps) {
-  const slug = await params;
+  const { slug } = await params;
+
+  const tag = slug[0];
   const queryClient = new QueryClient();
 
   const initialQuery = '';
@@ -21,8 +23,9 @@ export default async function SlugPage({ params }: SlugPageProps) {
   const perPage = 12;
 
   await queryClient.prefetchQuery({
-    queryKey: ['notes', slug, initialQuery, initialPage, sortOrder, perPage],
-    queryFn: () => fetchNotes(initialQuery, initialPage, sortOrder, perPage),
+    queryKey: ['notes', initialQuery, initialPage, sortOrder, perPage, tag],
+    queryFn: () =>
+      fetchNotes(initialQuery, initialPage, sortOrder, perPage, tag),
   });
 
   return (
@@ -32,6 +35,7 @@ export default async function SlugPage({ params }: SlugPageProps) {
         initialPage={initialPage}
         sortOrder={sortOrder}
         perPage={perPage}
+        tag={tag}
       />
     </HydrationBoundary>
   );

@@ -20,6 +20,7 @@ interface NotesClientProps {
   initialPage: number;
   sortOrder: 'created' | 'updated';
   perPage: number;
+  tag: string;
 }
 
 export default function NotesClient({
@@ -27,6 +28,7 @@ export default function NotesClient({
   initialPage,
   sortOrder,
   perPage,
+  tag,
 }: NotesClientProps) {
   const [page, setPage] = useState(initialPage);
   const [query, setQuery] = useState(initialQuery);
@@ -39,8 +41,8 @@ export default function NotesClient({
   }, 300);
 
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ['notes', query, page, sortOrder, perPage],
-    queryFn: () => fetchNotes(query, page, sortOrder, perPage),
+    queryKey: ['notes', query, page, sortOrder, perPage, tag],
+    queryFn: () => fetchNotes(query, page, sortOrder, perPage, tag),
     placeholderData: keepPreviousData,
   });
 

@@ -21,7 +21,8 @@ export async function fetchNotes(
   query: string,
   page: number,
   sortOrder: SortOrder,
-  perPage: number
+  perPage: number,
+  tag?: string
 ): Promise<fetchNotesResponse> {
   try {
     const response = await axios.get<fetchNotesResponse>(`/notes`, {
@@ -30,6 +31,7 @@ export async function fetchNotes(
         page,
         sortBy: sortOrder,
         perPage,
+        tag: tag === 'all' ? undefined : tag,
       },
       headers: {
         Authorization: `Bearer ${CLIENT_TOKEN}`,
