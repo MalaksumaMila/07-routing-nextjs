@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { fetchNotes, fetchNoteById } from '@/lib/api';
+import { fetchNotes } from '@/lib/api';
 
 import css from './NotesPage.module.css';
 
@@ -16,33 +16,21 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Loader from '@/app/loading';
 
 interface NotesClientProps {
-  initialQuery: string;
-  initialPage: number;
-  sortOrder: 'created' | 'updated';
-  perPage: number;
   tag: string;
 }
 
-export default function NotesClient({
-  initialQuery,
-  initialPage,
-  sortOrder,
-  perPage,
-  tag,
-}: NotesClientProps) {
-  const [page, setPage] = useState(initialPage);
-  const [query, setQuery] = useState(initialQuery);
-  const [search, setSearch] = useState(initialQuery);
+export default function NotesClient({ tag }: NotesClientProps) {
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
 
   const debounceSearch = useDebouncedCallback((value: string) => {
-    setSearch(value);
     setQuery(value);
     setPage(1);
   }, 300);
 
-  const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ['notes', query, page, sortOrder, perPage, tag],
-    queryFn: () => fetchNotes(query, page, sortOrder, perPage, tag),
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ['notes', query, page, tag],
+    queryFn: () => fetchNotes(query, page, tag),
     placeholderData: keepPreviousData,
   });
 
@@ -56,9 +44,7 @@ export default function NotesClient({
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        {isLoading && <Loader />}
-
-        <SearchBox search={search} onChange={debounceSearch} />
+        <SearchBox query={query} onChange={debounceSearch} />
 
         {isSuccess && pageCount > 1 && (
           <Pagination page={page} setPage={setPage} pageCount={pageCount} />
@@ -68,6 +54,7 @@ export default function NotesClient({
           Create note +
         </button>
       </header>
+      {isLoading && <Loader />}
 
       {isSuccess && !isLoading && data.notes.length > 0 && (
         <NoteList notes={data.notes} />

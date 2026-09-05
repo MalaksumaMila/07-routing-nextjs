@@ -16,12 +16,9 @@ export interface CreateNoteRequest {
   tag: string;
 }
 
-export type SortOrder = 'created' | 'updated';
 export async function fetchNotes(
   query: string,
   page: number,
-  sortOrder: SortOrder,
-  perPage: number,
   tag?: string
 ): Promise<fetchNotesResponse> {
   try {
@@ -29,8 +26,6 @@ export async function fetchNotes(
       params: {
         search: query || undefined,
         page,
-        sortBy: sortOrder,
-        perPage,
         tag: tag === 'all' ? undefined : tag,
       },
       headers: {

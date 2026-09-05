@@ -13,30 +13,19 @@ interface SlugPageProps {
 
 export default async function SlugPage({ params }: SlugPageProps) {
   const { slug } = await params;
-
+  const query = '';
+  const page = 1;
   const tag = slug[0];
   const queryClient = new QueryClient();
 
-  const initialQuery = '';
-  const initialPage = 1;
-  const sortOrder = 'created';
-  const perPage = 12;
-
   await queryClient.prefetchQuery({
-    queryKey: ['notes', initialQuery, initialPage, sortOrder, perPage, tag],
-    queryFn: () =>
-      fetchNotes(initialQuery, initialPage, sortOrder, perPage, tag),
+    queryKey: ['notes', query, page, tag],
+    queryFn: () => fetchNotes(query, page, tag),
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <NotesClient
-        initialQuery={initialQuery}
-        initialPage={initialPage}
-        sortOrder={sortOrder}
-        perPage={perPage}
-        tag={tag}
-      />
+      <NotesClient tag={tag} />
     </HydrationBoundary>
   );
 }
